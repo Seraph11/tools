@@ -15,9 +15,13 @@ echo 'Desea editar el archivo de repositorios Y = si, N = no'
 read repo
 if [ "$repo" = "y" -o "$repo" = "Y" ]; then
 	vi /etc/apt/sources.list > /dev/stdout
+elif [ "$repo" = "n" -o "$repo" = "N" ]; then
+	aptitude install -y nvidia-kernel-$(uname -r) nvidia-glx nvidia-xconfig nvidia-settings > /dev/stdout
+	nvidia-xconfig > /dev/stdout
+	envi=`cat /etc/X11/default-display-manager | cut -d'/' -f4`
+	/etc/init.d/${envi} restart
+	exit 0;
+else
+	echo "Opción incorrecta por favor ejecute de nuevo el script y seleccione una opción adecuada"
+	exit 1;
 fi
-aptitude install -y nvidia-kernel-$(uname -r) nvidia-glx nvidia-xconfig nvidia-settings > /dev/stdout
-nvidia-xconfig > /dev/stdout
-envi=`cat /etc/X11/default-display-manager | cut -d'/' -f4`
-/etc/init.d/${envi} restart
-exit 0;
